@@ -37,4 +37,6 @@ services:
     networks:
       - mysql
 
-  
+  node:
+    image: node:11.1.0-alpine
+    restart: always
