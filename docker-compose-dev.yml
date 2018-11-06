@@ -1,0 +1,17 @@
+---
+
+# NOTE:
+# Ports are exposed for local debugging. No components or parts of the application 
+# should not reference localhost:${port} to access these services. Use the DNS alias instead.
+# i.e. mysql:3306, redis:6379
+
+version: '3'
+
+services:
+  redis:
+    ports:
+      - 6379:6379
+
+  mysql:
+    ports:
+      - 3306:3306

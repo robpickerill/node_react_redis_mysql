@@ -1,0 +1,10 @@
+[mysql]
+port                            = 3306
+
+[mysqld]
+bind_address                    = 0.0.0.0
+max_allowed_packet              = 256M
+max_connect_errors              = 1000000
+port                            = 3306
+skip_external_locking
+skip-name-resolve
