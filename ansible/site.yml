@@ -1,0 +1,35 @@
+---
+
+- name: provision instances
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  roles:
+  - cloudformation
+
+  tags:
+  - deploy
+
+- name: bootstrap
+  hosts: testing
+  become: true
+  remote_user: ec2-user
+  gather_facts: true
+
+  roles:
+  - bootstrap
+
+  tags:
+  - bootstrap
+
+- name: docker
+  hosts: testing
+  become: true
+  remote_user: ec2-user
+
+  roles:
+  - docker
+
+  tags:
+  - docker

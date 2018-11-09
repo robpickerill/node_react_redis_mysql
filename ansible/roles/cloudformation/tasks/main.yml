@@ -1,0 +1,14 @@
+---
+
+- name: deploy cloudformation stack
+  cloudformation:
+    stack_name: 'nodereactredismysql'
+    region: 'eu-west-2'
+    state: 'present'
+    template: '../cloudformation/ec2/template.yml'
+  register: stack
+
+- name: add host
+  add_host:
+    name: "{{ stack.stack_outputs.EIP }}"
+    groups: testing

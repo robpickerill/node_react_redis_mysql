@@ -1,0 +1,26 @@
+---
+
+- name: install docker
+  yum:
+    name: docker
+    state: installed
+  notify: restart docker
+
+- meta: flush_handlers
+
+- name: wait for docker
+  wait_for:
+    path: /var/run/docker.sock
+    state: present
+
+- name: enable docker
+  service:
+    name: docker
+    state: enabled
+    state: started
+
+- name: add ec2-user to docker group
+  user:
+    name: ec2-user
+    append: true
+    groups: docker
