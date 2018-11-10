@@ -1,0 +1,13 @@
+---
+
+stages:
+  - lint
+  - build
+  - test
+  - deploy
+
+yamllint:
+  stage: lint
+  image: sdesbure/yamllint
+  script:
+    - yamllint *.y?ml
