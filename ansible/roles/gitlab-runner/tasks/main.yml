@@ -1,3 +1,47 @@
 ---
 
-- name: 
+- name: install gpgp key
+  rpm_key:
+    state: present
+    key: https://packages.gitlab.com/gpg.key
+
+- name: install dependencies
+  yum:
+    name: ['pygpgme', 'yum-utils']
+    state: present
+
+- name: add gitlab runner repo
+  template:
+    src: runner_gitlab-ci-multi-runner.repo.j2
+    dest: /etc/yum.repos.d/runner_gitlab-ci-multi-runner.repo
+
+- name: install gitlab runner
+  yum:
+    name: gitlab-ci-multi-runner
+    state: latest
+    update_cache: true
+  notify: restart gitlab runner
+
+- meta: flush_handlers
+
+- name: enable gitlab runner
+  service:
+    name: gitlab-runner
+    state: started
+    enabled: true
+
+- name: List configured runners
+  command: gitlab-runner list
+  register: configured_runners
+  changed_when: False
+
+- name: Register runner to GitLab
+  command: gitlab-runner register >
+    --non-interactive
+    --url '{{ gitlab_runner_coordinator_url }}'
+    --registration-token '{{ gitlab_runner_registration_token }}'
+    --description '{{ gitlab_runner_description }}'
+    --tag-list '{{ gitlab_runner_tags | join(",") }}'
+    --executor '{{ gitlab_runner_executor }}'
+    --docker-image '{{ gitlab_runner_docker_image }}'
+  when: configured_runners.stderr.find('\n{{ gitlab_runner_description }}') == -1

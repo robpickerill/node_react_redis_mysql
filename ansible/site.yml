@@ -33,3 +33,14 @@
 
   tags:
   - docker
+
+- name: gitlab-runner
+  hosts: testing
+  become: true
+  remote_user: ec2-user
+
+  roles:
+  - gitlab-runner
+
+  tags:
+  - gitlab-runner
